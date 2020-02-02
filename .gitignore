@@ -1,0 +1,9 @@
+# Python
+__pycache__
+*.pyc
+
+# Config
+secret.json
+
+# IDE
+.vscode
