@@ -1,5 +1,7 @@
 # pubg-api-experiment
 
+![PUBG API experiment](script.gif)
+
 Experimenting with the [PUBG](https://developer.pubg.com/) API.
 
 ## Requirements
