@@ -1,4 +1,4 @@
-# api-labb
+# pubg-api-experiment
 
 Experimenting with the [PUBG](https://developer.pubg.com/) API.
 

@@ -1,7 +1,7 @@
 import requests
 import click
 
-from json import loads
+from json import loads, dumps
 
 
 with open("secret.json") as f:
@@ -17,7 +17,9 @@ HEADERS = {"Authorization": f"Bearer {API_KEY}", "Accept": "application/vnd.api+
 
 
 def _handle_exception(r):
-    click.echo(f"error {click.style(str(r.status_code), bold=True, fg='red')}")
+    click.echo(
+        f"Response HTTP code: {click.style(str(r.status_code), bold=True, fg='red')}"
+    )
 
     try:
         for error in r.json()["errors"]:
@@ -59,31 +61,58 @@ def player_info():
     if r.status_code != requests.codes.ok:
         _handle_exception(r)
 
-    player_ids = []
+    click.echo(
+        f"Response HTTP code: {click.style(str(r.status_code), fg='green', bold=True)}"
+    )
+
+    players = []
 
     for player in r.json()["data"]:
-        player_ids.append(player["id"])
+        players.append(player)
 
-    return platform, player_ids
+    return platform, players
 
 
-def lifetime_stats(platform, player_ids):
+def lifetime_stats(platform, players):
     base_url = "https://api.pubg.com/shards/{}/players/{}/seasons/lifetime"
 
-    for player_id in player_ids:
-        url = base_url.format(platform, player_info)
+    for player in players:
+        url = base_url.format(platform, player["id"])
 
+        click.echo(f"{click.style('Retrieving', bold=True)} {url}")
         r = requests.get(url, headers=HEADERS)
 
         if r.status_code != requests.codes.ok:
             _handle_exception(r)
 
-        click.echo(r.json())
+        click.echo(
+            f"Response HTTP code: {click.style(str(r.status_code), fg='green', bold=True)}"
+        )
+
+        click.secho(
+            f"Statistics for {player['attributes']['name']} (curated list of variables shown, more are available within the API)",
+            bold=True,
+        )
+
+        # print the amount of wins and kills this user has for each gamemode
+        for k, v in r.json()["data"]["attributes"]["gameModeStats"].items():
+            click.echo(f"{click.style(str(k), fg='green')} wins - {v['wins']}")
+            click.echo(f"{click.style(str(k), fg='green')} kills - {v['kills']}")
+            click.echo(
+                f"{click.style(str(k), fg='green')} rounds played - {v['roundsPlayed']}"
+            )
+            click.echo(
+                f"{click.style(str(k), fg='green')} distance walked - {v['walkDistance']}"
+            )
+            click.echo(f"{click.style(str(k), fg='green')} suicides - {v['suicides']}")
+            click.echo(
+                f"{click.style(str(k), fg='green')} damage dealt - {v['damageDealt']}"
+            )
 
 
 def main():
-    platform, player_ids = player_info()
-    lifetime_stats(platform, player_ids)
+    platform, players = player_info()
+    lifetime_stats(platform, players)
 
 
 if __name__ == "__main__":
