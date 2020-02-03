@@ -2,7 +2,7 @@
 
 ![PUBG API experiment](script.gif)
 
-Experimenting with the [PUBG](https://developer.pubg.com/) API.
+Experimenting with the [PUBG](https://developer.pubg.com/) API. The script prints a curated list of statistics for specified players by retrieving data from [api.pubg.com](https://api.pubg.com).
 
 ## Requirements
 
@@ -44,4 +44,4 @@ python app.py
 
 ## Author
 
-Script written by [Vilhelm Prytz](https://github.com/VilhelmPrytz).
+Script was written by [Vilhelm Prytz](https://github.com/VilhelmPrytz).
